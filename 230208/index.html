@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <title>생성자 함수</title>
+</head>
+
+<body>
+  <section>
+    <h2>근로자 추가하기</h2>
+    <form class="form" id="employee-form">
+      <div>
+        <label for="name">이름</label>
+        <input type="text" id="name" name="name">
+      </div>
+      <div>
+        <label for="gender">성별</label>
+        <select name="gender" id="gender">
+          <option value="male" selected>남자</option>
+          <option value="female">여자</option>
+        </select>
+      </div>
+      <div>
+        <label for="team">소속되어 있는 팀</label>
+        <select name="team" id="team">
+          <option value="frontend" selected>프론트엔드</option>
+          <option value="backend">백엔드</option>
+          <option value="publisher">퍼블리셔</option>
+          <option value="pm">PM</option>
+          <option value="design">디자인</option>
+        </select>
+      </div>
+      <button type="submit">추가하기</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>근로자 출결 관리 시스템</h2>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>이름</th>
+            <th>팀</th>
+            <th>출근상태</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr>
+            <td><button type="button">출근하기</button></td>
+            <td>김영희</td>
+            <td>웹 개발팀</td>
+            <td class="day-off">출근</td>
+          </tr> -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <script src="./index.js"></script>
+</body>
+
+</html>

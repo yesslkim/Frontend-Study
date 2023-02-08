@@ -1,0 +1,100 @@
+@font-face {
+  font-family: 'MonoplexKR-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_Monoplex-kr@1.0/MonoplexKR-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+input,
+button,
+select {font-family: 'MonoplexKR-Regular', '맑은고딕', sans-serif;}
+
+table {
+  border-collapse:collapse;
+  border-spacing:0;
+}
+
+body {
+  margin: 20px;
+}
+
+section {
+  max-width: 400px;
+  margin: 0 auto 20px;
+  border: 1px solid #ddd;
+}
+
+section h2 {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.form {
+  padding: 40px 30px;
+}
+
+.form div{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.form div:last-child {
+  margin-bottom: 20px;
+}
+
+.form select,
+.form input {
+  min-width: 180px;
+}
+
+.form label {
+  min-width: 140px;
+}
+
+.form button {
+  display: block;
+  width: 100%;
+}
+
+.table-wrap {
+  padding: 40px 30px;
+}
+
+.table {
+  border: 1px solid #eee;
+}
+
+.table th,
+.table td {
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 4px 8px;
+}
+
+.table td {
+  text-align: center;
+}
+
+.table td.on {
+  background-color: #2723ff;
+  color: #fff;
+}
+
+.table td.off {
+  background-color: #ff2323;
+  color: #fff;
+}
+
+.table td.day-off {
+  background-color: #ed23ff;
+  color: #fff;
+}
