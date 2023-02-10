@@ -22,6 +22,10 @@ function Employee(id, name, gender, team) {
   this.gender = gender;
   this.team = team;
   this.state = 'off';
+
+  this.setState = function (state) { 
+    return this.state = state;
+  }
 }
 
 const translateToKor = (eng) => { 
@@ -122,13 +126,9 @@ document.querySelector('tbody').addEventListener('click', (e) => {
 
   const currentId = Number(e.target.parentElement.parentElement.dataset.id);
 
-  const newEmployee = employees.map(employee => {
-    if (employee.id === currentId) { 
-      employee.state = 'on';
-      return employee;
-    }
-     
-    return employee;
+  employees.forEach(employee => {
+    if (employee.id !== currentId) return;
+      employee.setState('on');
     })
   
     updateTable();
