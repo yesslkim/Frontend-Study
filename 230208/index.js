@@ -39,6 +39,22 @@ const translateToKor = (eng) => {
   return dictionary[eng];
 }
 
+const resetForm = () => { 
+  const inputs = document.querySelectorAll('.form input');
+
+  inputs.forEach(input => input.value = '');
+  document.querySelector('#gender').value = 'male';
+  document.querySelector('#team').value = 'frontend';
+}
+
+const deleteDefaultState = () => { 
+  const tr = document.querySelectorAll('tbody tr');
+
+  if (tr.length > 1 && !tr[0].classList.contains('hidden')) {
+    tr[0].classList.add('hidden');
+   }
+}
+
 const updateTable = () => { 
   const tbody = document.querySelector('tbody');
 
@@ -59,6 +75,9 @@ const updateTable = () => {
 
     tbody.innerHTML += baseTempl;
   })
+
+  deleteDefaultState();
+  resetForm();
 }
 
 document.querySelector('#employee-form').addEventListener('change', (e) => { 
@@ -104,7 +123,6 @@ document.querySelector('tbody').addEventListener('click', (e) => {
   const currentId = Number(e.target.parentElement.parentElement.dataset.id);
 
   const newEmployee = employees.map(employee => {
-    console.log(employee)
     if (employee.id === currentId) { 
       employee.state = 'on';
       return employee;

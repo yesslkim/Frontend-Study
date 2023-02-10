@@ -70,6 +70,7 @@ section h2 {
 }
 
 .table {
+  width: 100%;
   border: 1px solid #eee;
 }
 
@@ -97,4 +98,8 @@ section h2 {
 .table td.day-off {
   background-color: #ed23ff;
   color: #fff;
+}
+
+.table td.hidden {
+  display: none;
 }
