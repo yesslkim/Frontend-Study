@@ -1,31 +1,13 @@
+const GENDER_DEFAULT_VALUE = document.querySelector('#gender').value;
+const TEAM_DEFAULT_VALUE = document.querySelector('#team').value;
+
 // CONSTANT
 let employeeId = 0;
-
 let employee = {
   id: employeeId,
   name: '',
-  gender: '',
-  team: ''
-}
-
-const employees = [];
-
-// CONSTRUCTOR FUNCTION
-function Employee(id, name, gender, team) {
-
-  if (!new.target) {
-    return new Employee(id, name, gender, team);
-  }
-
-  this.id = id;
-  this.name = name;
-  this.gender = gender;
-  this.team = team;
-  this.state = 'off';
-
-  this.setState = function (state) { 
-    return this.state = state;
-  }
+  gender: GENDER_DEFAULT_VALUE,
+  team: TEAM_DEFAULT_VALUE
 }
 
 const translateToKor = (eng) => { 
@@ -43,46 +25,96 @@ const translateToKor = (eng) => {
   return dictionary[eng];
 }
 
-const resetForm = () => { 
-  const inputs = document.querySelectorAll('.form input');
 
-  inputs.forEach(input => input.value = '');
-  document.querySelector('#gender').value = 'male';
-  document.querySelector('#team').value = 'frontend';
+// CONSTRUCTOR FUNCTION
+function Employee({id, name, gender, team}) {
+
+  if (!new.target) {
+    throw new Error('생성자 함수를 생성하기 위해서는 new 키워드를 붙여주세요.')
+  }
+
+  this.id = id;
+  this.name = name;
+  this.gender = gender;
+  this.team = team;
+  this.state = 'off';
+
+  this.setState = function (state) { 
+    return this.state = state;
+  }
 }
 
-const deleteDefaultState = () => { 
-  const tr = document.querySelectorAll('tbody tr');
+// 근로자 시스템
+function EmployeeForm() {
+  this.checkValid = function (employee) {
+    if (employee.name.length === 0) {
+      alert('이름을 입력해주세요');
+      return;
+    }
+  };
 
-  if (tr.length > 1 && !tr[0].classList.contains('hidden')) {
-    tr[0].classList.add('hidden');
-   }
+
+  this.reset = function () {
+    const inputs = document.querySelectorAll('.form input');
+  
+    inputs.forEach(input => input.value = '');
+    document.querySelector('#gender').value = 'male';
+    document.querySelector('#team').value = 'frontend';
+  }
 }
 
-const updateTable = () => { 
-  const tbody = document.querySelector('tbody');
+// 메인 관리 시스템
+function EmployeeTable() {
 
-  tbody.innerHTML = '';
+  this.update = function (employees) {  
+    const tbody = document.querySelector('tbody');
+    const tr = document.querySelectorAll('tbody tr');
 
-  employees.forEach(employee => {
-    const team = translateToKor(employee.team);
-    const state = translateToKor(employee.state);
+    tbody.innerHTML = '';
 
-    const baseTempl = `
-    <tr data-id='${employee.id}'>
-      <td><button type="button">출근하기</button></td>
-      <td>${employee.name}</td>
-      <td>${team}</td>
-      <td class=${employee.state}>${state}</td>
-    </tr>
-    `;
+    employees.forEach(employee => {
+      const team = translateToKor(employee.team);
+      const state = translateToKor(employee.state);
 
-    tbody.innerHTML += baseTempl;
-  })
+      const baseTempl = `
+      <tr data-id='${employee.id}'>
+        <td><button type="button">출근하기</button></td>
+        <td>${employee.name}</td>
+        <td>${team}</td>
+        <td class=${employee.state}>${state}</td>
+      </tr>
+      `;
 
-  deleteDefaultState();
-  resetForm();
+      tbody.innerHTML += baseTempl;
+    })
+
+    if (tr.length > 1 && !tr[0].classList.contains('hidden')) { 
+      this.deleteDefaultValue(tr[0])
+    }
+  }
+
+  this.deleteDefaultValue = function (firstTr) { 
+    firstTr.classList.add('hidden');
+  }
 }
+
+// 어드민 시스템
+function AdminSystem() { 
+  this.employees = [];
+  this.manageSystem = new EmployeeTable();
+  this.employeeForm = new EmployeeForm();
+  
+
+  this.addEmployee = function (employee) {
+    this.employees.push(employee);
+  }
+
+  this.updateChanges = function () { 
+    this.manageSystem.update(this.employees);
+    this.employeeForm.reset();
+  }
+}
+
 
 document.querySelector('#employee-form').addEventListener('change', (e) => { 
   employee = { ...employee, [e.target.name]: e.target.value };
@@ -91,33 +123,19 @@ document.querySelector('#employee-form').addEventListener('change', (e) => {
 document.querySelector('#employee-form').addEventListener('submit', (e) => {
   e.preventDefault();
   
-  if (employee.name.length === 0) {
-    alert('이름을 입력해주세요');
-    return;
-  }
-
-  document.querySelectorAll('.form select').forEach(select => {
-    if (employee[select.name] !== '') return;
-
-    employee = { ...employee, [select.name]: select.value };
-  })
-
-  const { id, name, gender, team } = employee;
-  const newEmployee = new Employee( id, name, gender, team);
-
-  employees.push(newEmployee);
-  updateTable();
+  adminSystem.employeeForm.checkValid(employee);
+  adminSystem.addEmployee(new Employee(employee));
+  adminSystem.updateChanges();
 
   alert(`${employee.name}님이 추가되었습니다.`);
-
   ++employeeId;
   employee = {
     id: employeeId,
     name: '',
-    gender: '',
-    team: ''
-  };
-  
+    gender: GENDER_DEFAULT_VALUE,
+    team: TEAM_DEFAULT_VALUE
+  }
+
   return;
 });
 
@@ -126,10 +144,12 @@ document.querySelector('tbody').addEventListener('click', (e) => {
 
   const currentId = Number(e.target.parentElement.parentElement.dataset.id);
 
-  employees.forEach(employee => {
+  adminSystem.employees.forEach(employee => {
     if (employee.id !== currentId) return;
       employee.setState('on');
     })
   
-    updateTable();
+  adminSystem.updateChanges();
 })
+
+const adminSystem = new AdminSystem();
