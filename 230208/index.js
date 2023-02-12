@@ -48,6 +48,10 @@ function Employee({id, name, gender, team, state}) {
 
 // 근로자 시스템
 function EmployeeForm() {
+  if (!new.target) {
+    throw new Error('생성자 함수를 생성하기 위해서는 new 키워드를 붙여주세요.')
+  }
+
   this.checkValid = function (employee) {
     if (employee.name.length === 0) {
       alert('이름을 입력해주세요');
@@ -67,6 +71,9 @@ function EmployeeForm() {
 
 // 메인 관리 시스템
 function EmployeeTable() {
+  if (!new.target) {
+    throw new Error('생성자 함수를 생성하기 위해서는 new 키워드를 붙여주세요.')
+  }
 
   this.update = function (employees) {
     const tbody = document.querySelector('tbody');
@@ -101,7 +108,11 @@ function EmployeeTable() {
 }
 
 // 어드민 시스템
-function AdminSystem() { 
+function AdminSystem() {
+  if (!new.target) {
+    throw new Error('생성자 함수를 생성하기 위해서는 new 키워드를 붙여주세요.')
+  }
+
   this.employees = [];
   this.manageSystem = new EmployeeTable();
   this.employeeForm = new EmployeeForm();
@@ -127,7 +138,6 @@ function AdminSystem() {
 
     if (data.length > 0) { 
       this.employees = savedEmployees;
-      console.log(this.employees)
       this.manageSystem.update(this.employees);
     }
   }
