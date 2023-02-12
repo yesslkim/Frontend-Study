@@ -1,5 +1,6 @@
 const GENDER_DEFAULT_VALUE = document.querySelector('#gender').value;
 const TEAM_DEFAULT_VALUE = document.querySelector('#team').value;
+const STATE_DEFAULT_VALUE = 'off';
 
 // CONSTANT
 let employeeId = 0;
@@ -7,7 +8,8 @@ let employee = {
   id: employeeId,
   name: '',
   gender: GENDER_DEFAULT_VALUE,
-  team: TEAM_DEFAULT_VALUE
+  team: TEAM_DEFAULT_VALUE,
+  state: STATE_DEFAULT_VALUE,
 }
 
 const translateToKor = (eng) => { 
@@ -27,7 +29,7 @@ const translateToKor = (eng) => {
 
 
 // CONSTRUCTOR FUNCTION
-function Employee({id, name, gender, team}) {
+function Employee({id, name, gender, team, state}) {
 
   if (!new.target) {
     throw new Error('생성자 함수를 생성하기 위해서는 new 키워드를 붙여주세요.')
@@ -37,7 +39,7 @@ function Employee({id, name, gender, team}) {
   this.name = name;
   this.gender = gender;
   this.team = team;
-  this.state = 'off';
+  this.state = state;
 
   this.setState = function (state) { 
     return this.state = state;
@@ -66,7 +68,7 @@ function EmployeeForm() {
 // 메인 관리 시스템
 function EmployeeTable() {
 
-  this.update = function (employees) {  
+  this.update = function (employees) {
     const tbody = document.querySelector('tbody');
     const tr = document.querySelectorAll('tbody tr');
 
@@ -88,10 +90,10 @@ function EmployeeTable() {
       tbody.innerHTML += baseTempl;
     })
 
-    if (tr.length > 1 && !tr[0].classList.contains('hidden')) { 
+    if (tr.length > 1 && !tr[0].classList.contains('hidden')) {
       this.deleteDefaultValue(tr[0])
     }
-  }
+  };
 
   this.deleteDefaultValue = function (firstTr) { 
     firstTr.classList.add('hidden');
@@ -107,11 +109,27 @@ function AdminSystem() {
 
   this.addEmployee = function (employee) {
     this.employees.push(employee);
-  }
+  };
 
-  this.updateChanges = function () { 
+  this.updateChanges = function () {
     this.manageSystem.update(this.employees);
+    this.saveAs();
     this.employeeForm.reset();
+  };
+
+  this.saveAs = function () {
+    localStorage.setItem('employees', JSON.stringify(this.employees))
+  };
+
+  this.loadSavedInfo = function () { 
+    const data = JSON.parse(localStorage.getItem('employees'));
+    const savedEmployees = data.map(employee => new Employee(employee));
+
+    if (data.length > 0) { 
+      this.employees = savedEmployees;
+      console.log(this.employees)
+      this.manageSystem.update(this.employees);
+    }
   }
 }
 
@@ -133,7 +151,8 @@ document.querySelector('#employee-form').addEventListener('submit', (e) => {
     id: employeeId,
     name: '',
     gender: GENDER_DEFAULT_VALUE,
-    team: TEAM_DEFAULT_VALUE
+    team: TEAM_DEFAULT_VALUE,
+    state: STATE_DEFAULT_VALUE
   }
 
   return;
@@ -146,10 +165,15 @@ document.querySelector('tbody').addEventListener('click', (e) => {
 
   adminSystem.employees.forEach(employee => {
     if (employee.id !== currentId) return;
-      employee.setState('on');
+    employee.setState('on');
     })
   
   adminSystem.updateChanges();
 })
 
 const adminSystem = new AdminSystem();
+if (typeof localStorage.getItem('employees') === 'string') { 
+  adminSystem.loadSavedInfo();
+  employeeId += adminSystem.employees.length;
+  employee.id += adminSystem.employees.length;
+}
